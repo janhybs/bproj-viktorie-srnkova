@@ -1,14 +1,26 @@
-const express = require("express");
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
 const app = express();
+
+
+app.use(express.json());
+app.use(express.urlencoded());
+app.use(cors());
 
 // const mysql = require('mysql');
 
 const hostname = '127.0.0.1';
 const port = 5000;
 
-app.post('/registrace', cors(), (req, res) => {
-    const delktaPobytu = req.body?.delkaPobytu;
+interface BodyRequest {
+    jmeno: string;
+    prijmeni: string;
+    email: string;
+    delkaPobytu: number;
+}
+
+app.post('/registrace', (req, res) => {
+    const { jmeno, prijmeni, email, delkaPobytu } = req.body as BodyRequest;
 
     //save to database
     // const connection = mysql.createConnection({
@@ -18,7 +30,7 @@ app.post('/registrace', cors(), (req, res) => {
     //     database: 'hotel'
     // });
     // connection.connect();
-    // connection.query(`INSERT INTO pobyt (delkaPobytu) VALUES ('${delktaPobytu}')`, (err, rows, fields) => {
+    // connection.query(`INSERT INTO pobyt (delkaPobytu) VALUES ('${delkaPobytu}')`, (err, rows, fields) => {
     //     if (err) {
     //         console.log(err);
     //         res.status(500).send(err);
@@ -28,7 +40,8 @@ app.post('/registrace', cors(), (req, res) => {
     // });
     
     res.send({
-        delktaPobytu: delktaPobytu,
+        delkaPobytu: delkaPobytu,
+        celeJmeno: `${jmeno} ${prijmeni.toUpperCase()}: ${email}`,
         status: 'ok',
         cislo: Math.random(),
     });
